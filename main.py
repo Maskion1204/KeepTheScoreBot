@@ -10,7 +10,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-
 # КОНСТАНТЫ
 BASE_URL = "https://keepthescore.com/api"
 HEADERS = {
@@ -86,7 +85,7 @@ def find_player_by_input(players, input_str):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Начало работы с ботом."""
     await update.message.reply_text("Привет! Я бот для управления досками на keepthescore.com.\n"
-                                      "Пожалуйста, введите токен вашей доски:")
+                                    "Пожалуйста, введите токен вашей доски:")
     return ENTER_TOKEN
 
 
@@ -122,7 +121,7 @@ async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 async def list_players(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Выводит список игроков."""
-    logger.info("Вызвана функция list_players") # Логируем
+    logger.info("Вызвана функция list_players")  # Логируем
     chat_id = update.callback_query.message.chat_id
     token = user_data[chat_id]['token']
     board_data = get_board_data(token)
@@ -133,13 +132,13 @@ async def list_players(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
             await update.callback_query.edit_message_text(text=player_list, reply_markup=InlineKeyboardMarkup([[
                 InlineKeyboardButton("Главное меню", callback_data="main_menu")]]))
             await update.callback_query.answer()  # Добавляем answer()
-            logger.info("Успешно выведен список игроков и предложена кнопка 'Главное меню'") # Логируем
+            logger.info("Успешно выведен список игроков и предложена кнопка 'Главное меню'")  # Логируем
         else:
             await update.callback_query.answer("Не удалось получить список игроков")
-            logger.warning("Не удалось получить список игроков из board_data") # Логируем
+            logger.warning("Не удалось получить список игроков из board_data")  # Логируем
     else:
         await update.callback_query.answer("Не удалось получить данные доски")
-        logger.error("Не удалось получить board_data") # Логируем
+        logger.error("Не удалось получить board_data")  # Логируем
     return MAIN_MENU
 
 
@@ -171,7 +170,7 @@ async def enter_player_name(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 async def edit_player(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Выбор игрока для переименования."""
-    logger.info("Вызвана функция edit_player") # Log
+    logger.info("Вызвана функция edit_player")  # Log
     chat_id = update.callback_query.message.chat_id
     token = user_data[chat_id]['token']
 
@@ -190,21 +189,21 @@ async def edit_player(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     keyboard = []
     for player in players:
         keyboard.append([InlineKeyboardButton(player['name'], callback_data=f"select_player_rename_{player['id']}")])
-    keyboard.append([InlineKeyboardButton("Отмена", callback_data="main_menu")]) # Кнопка Отмена
+    keyboard.append([InlineKeyboardButton("Отмена", callback_data="main_menu")])  # Кнопка Отмена
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.callback_query.edit_message_text("Выберите игрока для переименования:", reply_markup=reply_markup)
-    await update.callback_query.answer() # Add answer
+    await update.callback_query.answer()  # Add answer
     return SELECT_PLAYER_RENAME
 
 
 async def select_player_rename(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Запрашивает новое имя игрока."""
-    logger.info("Вызвана функция select_player_rename") # Log
+    logger.info("Вызвана функция select_player_rename")  # Log
     player_id = update.callback_query.data.split('_')[-1]
     context.user_data['player_id'] = player_id
     await update.callback_query.edit_message_text("Введите новое имя игрока (или 'отмена' для отмены):")
-    await update.callback_query.answer() # Add answer
+    await update.callback_query.answer()  # Add answer
     return ENTER_NEW_PLAYER_NAME
 
 
@@ -255,7 +254,7 @@ async def delete_player(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.callback_query.edit_message_text("Выберите игрока для удаления:", reply_markup=reply_markup)
-    await update.callback_query.answer() # Важно!
+    await update.callback_query.answer()  # Важно!
     return SELECT_PLAYER_DELETE
 
 
@@ -294,7 +293,7 @@ async def delete_player_confirmed(update: Update, context: ContextTypes.DEFAULT_
 
 async def edit_scores(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Выбор игрока для редактирования очков."""
-    logger.info("Вызвана функция edit_scores") # Log
+    logger.info("Вызвана функция edit_scores")  # Log
     chat_id = update.callback_query.message.chat_id
     token = user_data[chat_id]['token']
 
@@ -324,7 +323,7 @@ async def edit_scores(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 
 async def select_score_edit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Запрашивает изменение очков."""
-    logger.info("Вызвана функция select_score_edit") # Log
+    logger.info("Вызвана функция select_score_edit")  # Log
     player_id = update.callback_query.data.split('_')[-1]
     context.user_data['player_id'] = player_id
     await update.callback_query.edit_message_text("Введите изменение очков (например, +5 или -3, или "
@@ -451,7 +450,7 @@ async def confirm_reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
 async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Возвращает в главное меню."""
-    logger.info("Вызвана функция main_menu") # Логируем
+    logger.info("Вызвана функция main_menu")  # Логируем
     await show_main_menu(update, context)
     return MAIN_MENU
 
@@ -506,4 +505,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
